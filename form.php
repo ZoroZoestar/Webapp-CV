@@ -8,6 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['nama'] = $_POST['nama'];
     $_SESSION['ttl'] = $_POST['ttl'];
     $_SESSION['pendidikan'] = $_POST['pendidikan'];
+    
+    if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
+        $gambar_path = 'uploads/' . basename($_FILES['gambar']['name']);
+        move_uploaded_file($_FILES['gambar']['tmp_name'], $gambar_path);
+        $_SESSION['gambar'] = $gambar_path;
+    }
+    
     header('Location: cv.php');
     exit();
 }
@@ -24,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="container mt-5">
     <h2 class="text-center" style="margin: 20px">Masukkan Data CV</h2>
-    <form method="POST" class="card p-4 mx-auto" style="max-width: 500px;">
+    <form method="POST" enctype="multipart/form-data" class="card p-4 mx-auto" style="max-width: 500px;">
         <div class="mb-3">
             <label class="form-label">Nama</label>
             <input type="text" name="nama" class="form-control" required>
@@ -36,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="mb-3">
             <label class="form-label">Riwayat Pendidikan</label>
             <textarea name="pendidikan" class="form-control" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Upload Foto</label>
+            <input type="file" name="gambar" class="form-control" accept="image/*">
         </div>
         <button type="submit" class="btn btn-success w-100">Simpan & Lihat CV</button>
         <a href="logout.php" class="btn btn-danger mt-3">Logout</a>
